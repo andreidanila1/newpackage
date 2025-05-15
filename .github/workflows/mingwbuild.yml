@@ -62,15 +62,15 @@ jobs:
                   cd /home/docker/scopy/tools/packagegenerator &&
                   pip3 install -r requirements.txt &&
                   python3 ./package_generator.py -h &&
-                  mkdir -p /home/docker/scopy/packages/%GITHUB_REPO_NAME% &&
-                  cp -r /home/docker/scopy/package/* /home/docker/scopy/packages/%GITHUB_REPO_NAME%/ &&
+                  mkdir -p /home/docker/scopy/packages/\${GITHUB_REPOSITORY} &&
+                  cp -r /home/docker/scopy/package/* /home/docker/scopy/packages/\${GITHUB_REPOSITORY}/ &&
                   cd /home/docker/scopy &&
                   mkdir -p build && cd build &&
                   cmake .. -G "MinGW Makefiles" &&
                   mingw32-make -j$(nproc) &&
-                  cp -r /home/docker/scopy/packages/%GITHUB_REPO_NAME% /home/docker/artifact_x86_64 || echo "Package directory not found!" &&
+                  cp -r /home/docker/scopy/packages/\${GITHUB_REPOSITORY} /home/docker/artifact_x86_64 || echo "Package directory not found!" &&
                   cd /home/docker/scopy/tools/packagegenerator &&
-                  python3 ./package_generator.py -a --src=/home/docker/artifact_x86_64/%GITHUB_REPO_NAME% --dest=/home/docker/artifact_x86_64
+                  python3 ./package_generator.py -a --src=/home/docker/artifact_x86_64/\${GITHUB_REPOSITORY} --dest=/home/docker/artifact_x86_64
                 "
 
       - name: Set short git commit SHA

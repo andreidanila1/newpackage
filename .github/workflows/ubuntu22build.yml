@@ -56,7 +56,7 @@ jobs:
       - name: Archive using package generator
         run: |
           cd scopy/tools/packagegenerator
-          python3 ./package_generator -a --src=$GITHUB_WORKSPACE/$REPO_NAME --dest=$GITHUB_WORKSPACE
+          python3 ./package_generator.py -a --src=$GITHUB_WORKSPACE/$REPO_NAME --dest=$GITHUB_WORKSPACE
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

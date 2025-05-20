@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# filepath: /home/andrei/git_repositories/scopy2_dev/scopy/packages/newpackage/build_package.sh
-
 set -e  # Exit immediately if a command exits with a non-zero status
 set -o pipefail  # Prevent errors in a pipeline from being masked
 

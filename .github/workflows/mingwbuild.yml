@@ -58,7 +58,7 @@ jobs:
                 -e GITHUB_JOB=%GITHUB_JOB% ^
                 -e RUNNER_ARCH=%RUNNER_ARCH% ^
                 -e CI_SCRIPT=ON ^
-                cristianbindea/scopy2-mingw64:testing C:\msys64\usr\bin\bash.exe -c "${GITHUB_WORKSPACE}\scripts\build_mingw_pkg.sh"
+                cristianbindea/scopy2-mingw64:testing C:\msys64\usr\bin\bash.exe -c "ls /home/docker && /home/docker/package/scripts/build_mingw_pkg.sh"
 
       - name: Set short git commit SHA
         shell: bash

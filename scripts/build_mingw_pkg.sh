@@ -27,7 +27,7 @@ mkdir -p build && cd build
 
 source /home/docker/scopy/scopy/ci/windows/mingw_toolchain.sh $USE_STAGING
 
-$CMAKE .. $RC_COMPILER_OPT -DPYTHON_EXECUTABLE=$STAGING_DIR/bin/python3.exe -DENABLE_TESTING=OFF -DDISABLE_ALL_PACKAGES:BOOL=ON -DENABLE_PACKAGE_NEWPACKAGE:BOOL=ON
+$CMAKE .. $RC_COMPILER_OPT -DPYTHON_EXECUTABLE=$STAGING_DIR/bin/python3.exe -DENABLE_TESTING=OFF
 $MAKE_BIN $JOBS
 
 echo "Copying the package directory to the artifact location..."

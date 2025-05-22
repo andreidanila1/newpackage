@@ -53,17 +53,17 @@ stages:
       clean: true
     - script: ./ci/macOS/install_macos_deps.sh
       displayName: 'Build and Install Dependencies'
-      workingDirectory: $(Build.SourcesDirectory)/scopy
+      workingDirectory: $(Build.Repository.LocalPath)/../scopy
     - script: |
             pip3 install -r requirements.txt
             python3 ./package_generator.py -h
       displayName: 'Check package generator and install dependencies'
-      workingDirectory: $(Build.SourcesDirectory)/scopy/tools/packagegenerator 
+      workingDirectory: $(Build.Repository.LocalPath)/../scopy/tools/packagegenerator 
     - script: |
             mkdir -p scopy/packages/$(REPO_SLUG)
             cp -r package/* scopy/packages/$(REPO_SLUG)/
       displayName: 'Copy $(REPO_SLUG) to Scopy'
-      workingDirectory: $(Build.SourcesDirectory)
+      workingDirectory: $(Build.Repository.LocalPath)/..
     - script: |
             export BUILD_HOST="$(vmImage)"
             export ACCOUNT_NAME=`echo $(resources.repositories.scopy.name) | awk -F "/" '{print $1}'`
@@ -80,9 +80,9 @@ stages:
       displayName: 'Build Scopy'
       workingDirectory: $(Build.Repository.LocalPath)
     - script: |
-            ./package_generator.py -a --src=$(Build.SourcesDirectory)/scopy/build/packages/$(REPO_SLUG) --dest=$(Build.ArtifactStagingDirectory)
+            ./package_generator.py -a --src=$(Build.Repository.LocalPath)/../scopy/build/packages/$(REPO_SLUG) --dest=$(Build.ArtifactStagingDirectory)
       displayName: 'Create package zip'
-      workingDirectory: $(Build.SourcesDirectory)/scopy/tools/packagegenerator
+      workingDirectory: $(Build.Repository.LocalPath)/../scopy/tools/packagegenerator
     - task: GithubRelease@1
       displayName: 'Push to continuous release'
       condition: and(succeeded(), and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))

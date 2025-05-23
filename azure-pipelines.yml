@@ -66,17 +66,17 @@ stages:
       workingDirectory: $(Build.Repository.LocalPath)/..
     - script: |
             export BUILD_HOST="$(vmImage)"
-            export ACCOUNT_NAME=`echo $(resources.repositories.scopy.name) | awk -F "/" '{print $1}'`
-            export PROJECT_NAME=`echo $(resources.repositories.scopy.name) | awk -F "/" '{print $2}'`
+            export ACCOUNT_NAME=`echo $[ resources.repositories.scopy.name ] | awk -F "/" '{print $1}'`
+            export PROJECT_NAME=`echo $[ resources.repositories.scopy.name ] | awk -F "/" '{print $2}'`
             export USERNAME="azure-pipelines"
-            export BUILD_REPO_URL=$(resources.repositories.scopy.url)
+            export BUILD_REPO_URL=$[ resources.repositories.scopy.url ]
             export RUN_ID=$(Build.BuildId)
             export RUN_NUMBER=$(Build.BuildNumber)
             export JOB_ID=$(System.JobId)
             export JOB_NAME=$(System.JobName)
             export RUNNER_ARCH=$(Agent.OSArchitecture)
             export MACOSX_DEPLOYMENT_TARGET=11.0
-            ./scripts/build_macos_pkg.sh
+            ./scripts/build_macos_pkg.sh $(Build.Repository.LocalPath)/../scopy
       displayName: 'Build Scopy'
       workingDirectory: $(Build.Repository.LocalPath)
     - script: |

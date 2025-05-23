@@ -2,7 +2,12 @@
 set -ex
 
 # Scopy path
-REPO_SRC=$(realpath scopy)
+# Scopy path
+REPO_SRC=$1
+if [ -z "$REPO_SRC" ]; then
+	echo "Error: REPO_SRC is not set. Please provide the path to the Scopy repository."
+	exit 1
+fi
 source $REPO_SRC/ci/macOS/macos_config.sh
 
 build_scopy(){

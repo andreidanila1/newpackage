@@ -9,7 +9,7 @@ resources:
     type: github
     endpoint: scopy_github_connection
     name: analogdevicesinc/scopy
-    ref: main-pkg-manager
+    ref: pkg-man-test
 
 trigger:
   branches:
@@ -30,12 +30,6 @@ stages:
   - job: macOSBuilds
     strategy:
       matrix:
-        macOS_13:
-          vmImage: 'macOS-13'
-          artifactName: 'macOS-13'
-        macOS_14:
-          vmImage: 'macOS-14'
-          artifactName: 'macOS-14'
         macOS_15:
           vmImage: 'macOS-15'
           artifactName: 'macOS-15'
@@ -51,6 +45,19 @@ stages:
       path: scopy
       fetchDepth: 0
       clean: true
+    - script: |
+            PKG_NAME=$(echo $(Build.Repository.Name) | awk -F "/" '{print $2}')
+            echo "##vso[task.setvariable variable=PKG_NAME]$PKG_NAME"
+      displayName: 'Extract Repository Name'
+    - script: |
+            mkdir -p scopy/packages/$(PKG_NAME)
+            cp -r package/* scopy/packages/$(PKG_NAME)/
+            echo "ls scopy/packages"
+            ls scopy/packages
+            echo "ls scopy/packages/$(PKG_NAME)"
+            ls scopy/packages/$(PKG_NAME)/
+      displayName: 'Copy $(PKG_NAME) to Scopy'
+      workingDirectory: $(Build.Repository.LocalPath)/..
     - script: ./ci/macOS/install_macos_deps.sh
       displayName: 'Build and Install Dependencies'
       workingDirectory: $(Build.Repository.LocalPath)/../scopy
@@ -59,11 +66,6 @@ stages:
             python3 ./package_generator.py -h
       displayName: 'Check package generator and install dependencies'
       workingDirectory: $(Build.Repository.LocalPath)/../scopy/tools/packagegenerator 
-    - script: |
-            mkdir -p scopy/packages/$(REPO_SLUG)
-            cp -r package/* scopy/packages/$(REPO_SLUG)/
-      displayName: 'Copy $(REPO_SLUG) to Scopy'
-      workingDirectory: $(Build.Repository.LocalPath)/..
     - script: |
             export BUILD_HOST="$(vmImage)"
             export ACCOUNT_NAME=`echo $[ resources.repositories.scopy.name ] | awk -F "/" '{print $1}'`
@@ -76,11 +78,16 @@ stages:
             export JOB_NAME=$(System.JobName)
             export RUNNER_ARCH=$(Agent.OSArchitecture)
             export MACOSX_DEPLOYMENT_TARGET=11.0
-            ./scripts/build_macos_pkg.sh $(Build.Repository.LocalPath)/../scopy
+            ./ci/macOS/build_azure_macos.sh
       displayName: 'Build Scopy'
-      workingDirectory: $(Build.Repository.LocalPath)
+      workingDirectory: $(Build.Repository.LocalPath)/../scopy
     - script: |
-            ./package_generator.py -a --src=$(Build.Repository.LocalPath)/../scopy/build/packages/$(REPO_SLUG) --dest=$(Build.ArtifactStagingDirectory)
+            ls -R build
+            cp build/Scopy.app/Contents/MacOS/Users/runner/work/1/scopy/build/packages/$(PKG_NAME)/plugins/*.dylib build/scopy/packages/$(PKG_NAME)/plugins
+      displayName: 'Copy plugin .so to the package'
+      workingDirectory: $(Build.Repository.LocalPath)/../scopy  
+    - script: |
+            python3 ./package_generator.py -a --src=$(Build.Repository.LocalPath)/../scopy/build/packages/$(PKG_NAME) --dest=$(Build.ArtifactStagingDirectory)
       displayName: 'Create package zip'
       workingDirectory: $(Build.Repository.LocalPath)/../scopy/tools/packagegenerator
     - task: GithubRelease@1

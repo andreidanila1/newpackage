@@ -84,7 +84,7 @@ stages:
     - script: |
             ls -R build
             cp build/Scopy.app/Contents/MacOS/Users/runner/work/1/scopy/build/packages/$(PKG_NAME)/plugins/*.dylib build/packages/$(PKG_NAME)/plugins
-      displayName: 'Copy plugin .so to the package'
+      displayName: 'Copy plugin library to the package'
       workingDirectory: $(Build.Repository.LocalPath)/../scopy  
     - script: |
             python3 ./package_generator.py -a --src=$(Build.Repository.LocalPath)/../scopy/build/packages/$(PKG_NAME) --dest=$(Build.ArtifactStagingDirectory)

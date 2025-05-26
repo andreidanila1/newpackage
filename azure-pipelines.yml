@@ -83,7 +83,7 @@ stages:
       workingDirectory: $(Build.Repository.LocalPath)/../scopy
     - script: |
             ls -R build
-            cp build/Scopy.app/Contents/MacOS/Users/runner/work/1/scopy/build/packages/$(PKG_NAME)/plugins/*.dylib build/scopy/packages/$(PKG_NAME)/plugins
+            cp build/Scopy.app/Contents/MacOS/Users/runner/work/1/scopy/build/packages/$(PKG_NAME)/plugins/*.dylib build/packages/$(PKG_NAME)/plugins
       displayName: 'Copy plugin .so to the package'
       workingDirectory: $(Build.Repository.LocalPath)/../scopy  
     - script: |

@@ -30,13 +30,10 @@ source /home/docker/scopy/scopy/ci/windows/mingw_toolchain.sh $USE_STAGING
 $CMAKE .. $RC_COMPILER_OPT -DPYTHON_EXECUTABLE=$STAGING_DIR/bin/python3.exe -DENABLE_TESTING=OFF
 $MAKE_BIN $JOBS
 
-echo "Copying the package directory to the artifact location..."
-cp -r /home/docker/scopy/scopy/build/packages/$GITHUB_REPOSITORY /home/docker/artifact_x86_64 || echo "Package directory not found!"
-
 echo "Returning to the package generator directory..."
 cd /home/docker/scopy/scopy/tools/packagegenerator
 
 echo "Running the package generator script to create the final artifact..."
-$STAGING_DIR/bin/python3.exe ./package_generator.py -a --src=/home/docker/artifact_x86_64/$GITHUB_REPOSITORY --dest=/home/docker/artifact_x86_64
+$STAGING_DIR/bin/python3.exe ./package_generator.py -a --src=/home/docker/scopy/scopy/build/packages/$GITHUB_REPOSITORY --dest=/home/docker/artifact_x86_64
 
 echo "Build and packaging process completed successfully!"

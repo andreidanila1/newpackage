@@ -67,5 +67,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: package-artifact
+          name: ${{ env.REPO_NAME }}-windows
           path: artifacts/*

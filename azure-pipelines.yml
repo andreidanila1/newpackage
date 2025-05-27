@@ -30,6 +30,12 @@ stages:
   - job: macOSBuilds
     strategy:
       matrix:
+        macOS_13:
+          vmImage: 'macOS-13'
+          artifactName: 'macOS-13'
+        macOS_15:
+          vmImage: 'macOS-14'
+          artifactName: 'macOS-14'
         macOS_15:
           vmImage: 'macOS-15'
           artifactName: 'macOS-15'
@@ -106,4 +112,4 @@ stages:
       displayName: 'Publish Package Artifact'
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)'
-        artifactName: 'ScopyPackage'
+        artifactName: '$(artifactName)'

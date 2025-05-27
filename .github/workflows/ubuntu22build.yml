@@ -60,5 +60,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: package-artifact
+          name: ${{ env.REPO_NAME }}-ubuntu22
           path: ${{ github.workspace }}/${{ env.REPO_NAME }}.zip
